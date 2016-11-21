@@ -1,0 +1,194 @@
+// Customer Table
+CREATE TABLE Customer 
+(
+    Customer_id int PRIMARY KEY,
+    Customer_name varchar(30) NOT NULL,
+    Customer_houseno varchar(20) NOT NULL,
+    Customer_street varchar(20) NOT NULL,
+    Customer_city varchar(20) NOT NULL,
+    Customer_pincode int(6) NOT NULL,
+    Customer_dob date NOT NULL,
+    Customer_age int NOT NULL,
+    Customer_phoneno varchar(15) NOT NULL,
+    Customer_email varchar(30) NOT NULL
+    );
+
+// Login_credentials
+create TABLE Login_credentials
+(
+    username varchar(20) PRIMARY KEY,
+    password varchar(20) NOT NULL,
+    security_question varchar(100) NOT NULL,
+    security_answer varchar(20) NOT NULL,
+    Customer_id int NOT NULL,
+    FOREIGN KEY (Customer_id) REFERENCES Customer(Customer_id)
+    );
+
+// Loan
+CREATE TABLE loan
+( 
+    loan_no int PRIMARY KEY,
+    loan_type varchar(20) NOT NULL,
+    loan_amount int NOT NULL,
+    account_no varchar(20) NOT NULL,
+    FOREIGN KEY (account_no) REFERENCES account(account_no),
+    branch_code varchar(10) NOT NULL,
+    FOREIGN KEY (branch_code) REFERENCES branch(branch_code)
+    );
+
+// Branch
+CREATE TABLE branch
+( 
+    branch_code varchar(10) PRIMARY KEY,
+    branch_name varchar(20) NOT NULL,
+    branch_city varchar(20) NOT NULL,
+    Assets int NOT NULL
+    );
+
+// borrower
+CREATE TABLE borrower
+(
+    Customer_id int NOT NULL,
+    loan_no int NOT NULL,
+    FOREIGN KEY (Customer_id) REFERENCES Customer(Customer_id),
+    FOREIGN Key (loan_no) REFERENCES loan(loan_no)
+    );
+
+// account
+CREATE TABLE account
+(
+    account_no varchar(20) PRIMARY KEY,
+    account_balance int NOT NULL ,
+    account_type varchar(20) NOT NULL,
+    branch_code varchar(10) NOT NULL,
+    FOREIGN KEY (branch_code) REFERENCES branch(branch_code)    
+    );
+
+
+// depositor
+CREATE TABLE depositor
+(
+    Customer_id int NOT NULL,
+    account_no varchar(20) NOT NULL,
+    FOREIGN KEY (Customer_id) REFERENCES Customer(Customer_id),
+    FOREIGN KEY (account_no) REFERENCES account(account_no)
+    );
+
+// beneficiary
+CREATE TABLE beneficiary
+(
+    b_account_no varchar(20),
+    b_name varchar(20) NOT NULL,
+    b_credit_amount int,
+    account_no varchar(20) NOT NULL,
+    FOREIGN KEY (account_no) REFERENCES account(account_no)
+    );
+
+//transaction_details
+CREATE TABLE transaction_details
+(
+    transaction_id varchar(20) PRIMARY KEY,
+    transaction_type varchar(15) NOT null,
+    transaction_amount int NOT null,
+	ftaccount_no varchar(20),
+    transaction_date date not null,
+    transaction_time time not null,
+    account_no varchar(20) NOT null,
+    FOREIGN KEY (account_no) REFERENCES account(account_no)
+    );
+
+// admin
+CREATE TABLE IF NOT EXISTS admin (
+   admin_id int(10) PRIMARY KEY,
+   admin_name varchar(255) NOT NULL,
+   admin_gender char(1) NOT NULL,
+   admin_dob date NOT NULL,
+   admin_relationship varchar(255) NOT NULL,
+   admin_address varchar(255) NOT NULL,
+   admin_phone_no varchar(11) NOT NULL,
+  admin_username varchar(255) NOT NULL,
+  admin_password varchar(32) NOT NULL
+);
+
+// atm
+CREATE TABLE IF NOT EXISTS atm (
+  account_no varchar(20) NOT NULL,
+  atm_status varchar(50) NOT NULL,
+  FOREIGN KEY (account_no) REFERENCES account(account_no)  
+);
+
+// cheque_book
+CREATE TABLE IF NOT EXISTS cheque_book (
+  account_no varchar(20) NOT NULL,
+  cheque_book_status varchar(50) NOT NULL,
+  FOREIGN KEY (account_no) REFERENCES account(account_no)  
+);
+
+CREATE TABLE staff(
+  staff_id int(6) PRIMARY KEY,
+  name varchar(30) NOT NULL,
+  gender char(1) NOT NULL,
+  dob date NOT NULL,
+  city varchar(30) NOT NULL,
+  username varchar(20) NOT NULL,
+  password varchar(30) NOT NULL,
+  mobile varchar(11) NOT NULL,
+  email varchar(32) NOT NULL
+);
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+insert into Customer values("10001","Rashid feroz","2-1-56","Gandhi road","Kolkata","214520","02-04-1980","36","9587612310","rashid@gmail.com");
+insert into Customer values("10002","Deepak rajwar","8-1-90","HItech","Chennai","614895","07-03-1981","35","9587612314","deepak@gmail.com");
+insert into Customer values("10003","Shailesh kumar","7-8-90","Sardar road","Mumbai","468952","02-04-1979","37","8587612314","shailesh@gmail.com");
+insert into Customer values("10004","Ravi Nandan","5-8-60","Shastri ward","Bangalore","468752","04-06-1978","38","9587612358","ravi@gmail.com");
+insert into Customer values("10005","Isha deol","5-8-96","Necklace road","Chandigarh","365879","02-11-1977","39","9587612568","isha@gmail.com");
+
+
+insert into branch values("IB20000","jubilee branch","hyderabad","2010242" );
+insert into branch values("IB20001","civil branch","Allahabad","2010246" );
+insert into branch values("IB20002","Nehru branch","Mumbai","2018542" );
+insert into branch values("IB20003","hardy branch","Kolkata","2482242" );
+
+insert into account values("101789456123","56855","savings","IB20000");
+insert into account values("101789456321","25648","savings","IB20000");
+insert into account values("101789456456","6254","savings","IB20001");
+insert into account values("101789456789","123024","savings","IB20002");
+insert into account values("101789456987","2541","savings","IB20003");
+
+insert into loan values ("101256","Education","400000","101789456123","IB20000");
+insert into loan values ("101246","House","200000","101789456456","IB20001");
+insert into loan values ("101236","Business","100000","101789456987","IB20003");
+
+insert into depositor values ("10001","101789456123");
+insert into depositor values ("10002","101789456321");
+insert into depositor values ("10003","101789456456");
+insert into depositor values ("10004","101789456789");
+insert into depositor values ("10005","101789456987");
+
+insert into Borrower values ("10001","101256");
+insert into Borrower values ("10003","101246");
+insert into Borrower values ("10005","101236");
+
+insert into beneficiary values("101789456987","Isha deol","200","101789456123");
+insert into beneficiary values("101789456789","Ravi Nandan","10000","101789456321");
+
+insert into transaction_details values("IBTD1234","withdrawl","1200","2016-01-25","12:25:46","101789456123");
+insert into transaction_details values("IBTD1256","deposit","100000","2016-02-24","10:54:48","101789456987");
+insert into transaction_details values("IBTD7854","deposit","20000","2016-03-01","02:56:12","101789456456");
+insert into transaction_details values("IBTD6584","withdrawl","5000","2016-02-15","21:25:51","101789456789");
+
+insert into admin values("1012564","admin","M","1980-03-26","unmarried","iiita","9584562144","admin","admin");
+
+insert into atm values("101789456789","PENDING");
+insert into atm values("101789456987","ACTIVE");
+
+insert into cheque_book("101789456123","ACTIVE");
+insert into cheque_book("101789456321","PENDING");
+
+INSERT INTO `staff` (`id`, `name`, `dob`, `relationship`, `department`, `doj`, `address`, `mobile`, `email`, `pwd`, `gender`, `lastlogin`) VALUES
+(1, 'sunil', '1990-05-05', 'married', 'revenue', '1999-11-11', 'kestopur12', 'sunil@gmail', 'kul@gmail.com', 'wew', 'M', '2015-01-11 10:29:48'),
+(2, 'akash', '1998-08-21', 'unmarried', 'revenue', '2013-08-03', 'kolkata', '9635722546', 'akash@gmail.com', '125', 'M', '2015-01-10 21:22:59'),
+(4, 'pankaj', '1989-05-31', 'married', 'revenue', '2015-01-04', 'bhagalpur13', 'pankaj@gmai', 'pankaj@gmail.com', '789', 'M', '0000-00-00 00:00:00'),
+(5, 'sharma', '1980-04-21', 'married', 'revenue', '1991-01-01', 'khidirpur', '9876543210', 'sharma@gmail.com', 'sharma', 'M', '0000-00-00 00:00:00');
